@@ -41,21 +41,23 @@ void merge(int arr[], int startIndex, int mid, int endIndex) {
 }
 
 void mergeSort(int arr[], int startIndex, int endIndex) {
-    if (startIndex < endIndex) {
+    if (startIndex >= endIndex) {
+        return;
+    }
         int mid = (startIndex + startIndex) / 2;
 
         mergeSort(arr, startIndex, mid);
         mergeSort(arr, mid + 1, endIndex);
 
         merge(arr, startIndex, mid, endIndex);
-    }
+
 }
 
 int main(int argc, char *argv[]) {
     const int length = 10;
     int arr[length];
     for (int i = length; i >= 0; i--) {
-        arr[length - i] = i;
+        arr[length - i] = rand()%(3*length);
     }
     mergeSort(arr, 0, length - 1);
     for (int i = 0; i < length; i++)
