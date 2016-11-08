@@ -6,6 +6,8 @@
 #include <sys/shm.h>
 
 using namespace std;
+const int BASE = 10;
+const int LENGTH = 100;
 
 /*
  * a parallel merge sort using fork and shared memory
@@ -54,8 +56,14 @@ void mergeSort(int arr[], int startIndex, int endIndex) {
     pid_t rightChild = 0;
 
     int mid = (startIndex + startIndex) / 2;
-    if (endIndex - startIndex <= 0)
+    if (endIndex - startIndex <= 0) {
         return;
+    }
+
+    else if (endIndex - startIndex <= BASE) {
+        mergeSort(arr, startIndex, mid);
+        mergeSort(arr, mid + 1, endIndex);
+    }
 
     leftChild = fork();
     if (leftChild < 0) {
@@ -80,10 +88,10 @@ void mergeSort(int arr[], int startIndex, int endIndex) {
 }
 
 int main(int argc, char *argv[]) {
-    const int length = 100;
     int arr_id;
     int *arr;
-    arr_id = shmget(IPC_PRIVATE, length * sizeof(int), IPC_CREAT | 0666);
+
+    arr_id = shmget(IPC_PRIVATE, LENGTH * sizeof(int), IPC_CREAT | 0666);
 
     if (arr_id < 0) {
         perror("shmget failed");
@@ -94,12 +102,13 @@ int main(int argc, char *argv[]) {
     if (*arr == -1)
         return -1;
 
-    for (int i = 0; i < length; i++) {
-        arr[i] = rand() % (3 * length);
+    for (int i = 0; i < LENGTH; i++) {
+        arr[i] = rand() % (4 * LENGTH);
     }
 
-    mergeSort(arr, 0, length - 1);
-    for (int i = 0; i < length; i++)
+    mergeSort(arr, 0, LENGTH - 1);
+
+    for (int i = 0; i < LENGTH; i++)
         cout << arr[i] << endl;
     return 0;
 }
