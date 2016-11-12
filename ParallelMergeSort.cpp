@@ -4,10 +4,11 @@
 #include <sys/wait.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/time.h>
 
 using namespace std;
-const int BASE = 10;
-const int LENGTH = 100;
+const int BASE = 5000;
+const int LENGTH = 10000;
 
 /*
  * a parallel merge sort using fork and shared memory
@@ -104,9 +105,23 @@ int main(int argc, char *argv[]) {
         arr[i] = rand() % (4 * LENGTH);
     }
 
+    struct timeval t1, t2;
+    double elapsedTime;
+
+    // start timer
+    gettimeofday(&t1, NULL);
+
     mergeSort(arr, 0, LENGTH - 1);
 
-    for (int i = 0; i < LENGTH; i++)
-        cout << arr[i] << endl;
+    // stop timer
+    gettimeofday(&t2, NULL);
+
+    // compute and print the elapsed time in millisec
+    elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
+    elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
+    cout << elapsedTime << " ms.\n\n\n";
+
+    /*for (int i = 0; i < LENGTH; i++)
+        cout << arr[i] << endl;*/
     return 0;
 }
