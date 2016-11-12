@@ -58,32 +58,30 @@ void mergeSort(int arr[], int startIndex, int endIndex) {
     int mid = (startIndex + startIndex) / 2;
     if (endIndex - startIndex <= 0) {
         return;
-    }
-
-    else if (endIndex - startIndex <= BASE) {
+    } else if (endIndex - startIndex <= BASE) {
         mergeSort(arr, startIndex, mid);
         mergeSort(arr, mid + 1, endIndex);
-    }
-
-    leftChild = fork();
-    if (leftChild < 0) {
-        perror("fork failed");
-        exit(1);
-    } else if (leftChild == 0) {
-        mergeSort(arr, startIndex, mid);
-        exit(1);
-    } else if (leftChild > 0) {
-        rightChild = fork();
-        if (rightChild < 0) {
+    } else {
+        leftChild = fork();
+        if (leftChild < 0) {
             perror("fork failed");
             exit(1);
-        } else if (rightChild == 0) {
-            mergeSort(arr, mid + 1, endIndex);
+        } else if (leftChild == 0) {
+            mergeSort(arr, startIndex, mid);
             exit(1);
+        } else if (leftChild > 0) {
+            rightChild = fork();
+            if (rightChild < 0) {
+                perror("fork failed");
+                exit(1);
+            } else if (rightChild == 0) {
+                mergeSort(arr, mid + 1, endIndex);
+                exit(1);
+            }
         }
+        waitpid(leftChild, &state, 0);
+        waitpid(rightChild, &state, 0);
     }
-    waitpid(leftChild, &state, 0);
-    waitpid(rightChild, &state, 0);
     merge(arr, startIndex, mid, endIndex);
 }
 
