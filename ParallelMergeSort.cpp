@@ -7,7 +7,7 @@
 #include <sys/time.h>
 
 using namespace std;
-const int BASE = 5000;
+const int BASE = 7000;
 const int LENGTH = 10000;
 
 /*
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
     cout << elapsedTime << " ms.\n\n\n";
 
-    /*for (int i = 0; i < LENGTH; i++)
-        cout << arr[i] << endl;*/
+    for (int i = 0; i < LENGTH; i++)
+        cout << arr[i] << endl;
     return 0;
 }
